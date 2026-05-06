@@ -1,0 +1,8 @@
+*.json
+*.jsonlines
+*.csv
+__pycahche__/
+.ipynb_checkpoints/
+*.pkl
+*.joblib
+*.DS_Store

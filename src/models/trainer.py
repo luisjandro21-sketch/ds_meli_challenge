@@ -1,3 +1,4 @@
+import os
 import joblib
 import numpy as np
 import pandas as pd
@@ -8,6 +9,8 @@ from sklearn.preprocessing import FunctionTransformer, OneHotEncoder, StandardSc
 
 from src.config import BEST_PARAMS, BOOLEANS, CATEGORICAL, DUMMIES, NUMERICAL
 
+def convert_int(x):
+    return x.astype(int)
 
 class ModelTrainer:
     """Builds, trains, and serializes the tuned XGBoost pipeline."""
@@ -17,7 +20,7 @@ class ModelTrainer:
         self.pipeline: Pipeline | None = None
 
     def _build_pipeline(self) -> Pipeline:
-        bool_transformer = FunctionTransformer(lambda x: x.astype(int))
+        bool_transformer = FunctionTransformer(convert_int)
 
         preprocessor = ColumnTransformer(
             transformers=[
@@ -45,6 +48,7 @@ class ModelTrainer:
     def save(self, path: str) -> None:
         if self.pipeline is None:
             raise RuntimeError("No trained model to save.")
+        os.makedirs(os.path.dirname(path), exist_ok=True)
         joblib.dump(self.pipeline, path)
         print(f"Model saved to {path}")
 
